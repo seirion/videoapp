@@ -46,6 +46,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                 Log.d(TAG, "token: " + loginResult.getAccessToken());
                 String userId = loginResult.getAccessToken().getUserId();
                 String token = loginResult.getAccessToken().getToken();
+                handleLoginResult(true);
                 //loginToServer(userId, token);
             }
 
@@ -92,8 +93,8 @@ public class LoginActivity extends BaseAppCompatActivity {
 
     private void handleLoginResult(boolean success) {
         if (success) {
-            //startMainActivity();
-            //finish();
+            MainActivity.start(this);
+            finish();
         } else {
             Log.e("progress", "hide progress ");
             binding.progress.setVisibility(View.GONE);
