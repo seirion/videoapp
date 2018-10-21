@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">VideoApp</string>
+    <string name="facebook_app_id">314469905998685</string>
+    <string name="fb_login_protocol_scheme">fb314469905998685</string>
 </resources>
