@@ -1,5 +1,6 @@
 package com.seirion.videoapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding3.view.RxView;
+import com.seirion.videoapp.base.ActivityLifecycle;
 import com.seirion.videoapp.base.BaseAppCompatActivity;
 import com.seirion.videoapp.databinding.ActivityMainBinding;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends BaseAppCompatActivity {
 
@@ -26,11 +31,20 @@ public class MainActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDataBinding();
+        initUi();
         initAdapter();
     }
 
     private void setDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+    }
+
+    @SuppressLint("CheckResult")
+    private void initUi() {
+        RxView.clicks(binding.recordButton)
+                .takeUntil(getLifecycleSignal(ActivityLifecycle.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(v -> RecordActivity.start(this), err -> {}, () -> {});
     }
 
     private void initAdapter() {
