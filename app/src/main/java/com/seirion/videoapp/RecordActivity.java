@@ -3,8 +3,11 @@ package com.seirion.videoapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.jakewharton.rxbinding3.view.RxView;
@@ -17,9 +20,11 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class RecordActivity extends BaseAppCompatActivity {
+
+    private static final int REQUEST_VIDEO_CAPTURE = 1;
     private static String TAG = RecordActivity.class.getSimpleName();
     private ActivityRecordBinding binding;
-    private boolean recording = true;
+    private boolean hasVideo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,8 @@ public class RecordActivity extends BaseAppCompatActivity {
 
     @SuppressLint("CheckResult")
     private void initUi() {
+        //boolean hasCamera = hasSystemFeature(PackageManager.FEATURE_CAMERA);
+        // if (!hasCamera) return;
         RxView.clicks(binding.recordButton)
                 .takeUntil(getLifecycleSignal(ActivityLifecycle.DESTROY))
                 .throttleFirst(1, TimeUnit.SECONDS)
@@ -48,11 +55,29 @@ public class RecordActivity extends BaseAppCompatActivity {
     }
 
     private void record() {
-
+        dispatchTakeVideoIntent();
     }
 
     private void upload() {
 
+    }
+
+    private void dispatchTakeVideoIntent() {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.d(TAG, "requestCode: " + requestCode);
+        Log.d(TAG, "resultCode: " + resultCode);
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            Uri videoUri = intent.getData();
+            Log.d(TAG, "video: " + videoUri.getPath());
+            //mVideoView.setVideoURI(videoUri);
+        }
     }
 
     public static void start(Activity activity) {
