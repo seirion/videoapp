@@ -12,6 +12,13 @@
         android:layout_height="match_parent"
         android:background="#33ff0000" >
 
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:background="#ff00ff00"
+            />
+
         <TextView
             android:id="@+id/record_button"
             android:layout_width="50dp"
