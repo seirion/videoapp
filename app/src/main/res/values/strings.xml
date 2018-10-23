@@ -2,4 +2,7 @@
     <string name="app_name">VideoApp</string>
     <string name="facebook_app_id">314469905998685</string>
     <string name="fb_login_protocol_scheme">fb314469905998685</string>
+
+    <string name="rationale_title">권한 획득</string>
+    <string name="rationale_message">다음의 권한이 필요합니다</string>
 </resources>

@@ -1,19 +1,21 @@
 package com.seirion.videoapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jakewharton.rxbinding3.view.RxView;
 import com.seirion.videoapp.base.ActivityLifecycle;
 import com.seirion.videoapp.base.BaseAppCompatActivity;
 import com.seirion.videoapp.databinding.ActivityRecordBinding;
+import com.tedpark.tedpermission.rx2.TedRx2Permission;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,11 +32,37 @@ public class RecordActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setDataBinding();
+        requestPermission();
         initUi();
     }
 
     private void setDataBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_record);
+    }
+
+    @SuppressLint("CheckResult")
+    private void requestPermission() {
+        TedRx2Permission.with(this)
+                .setRationaleTitle(R.string.rationale_title)
+                .setRationaleMessage(R.string.rationale_message) // "we need permission for read contact and find your location"
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
+                .request()
+                .subscribe(tedPermissionResult -> {
+                    if (tedPermissionResult.isGranted()) {
+                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this,
+                                "Permission Denied\n" + tedPermissionResult.getDeniedPermissions().toString(), Toast.LENGTH_SHORT)
+                                .show();
+
+                        binding.recordButton.setEnabled(false);
+                        binding.uploadButton.setEnabled(false);
+                    }
+                }, throwable -> {
+                    Log.e(TAG, "e: " +throwable);
+                });
     }
 
     @SuppressLint("CheckResult")
