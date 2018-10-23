@@ -42,5 +42,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha1'
 
-    implementation "com.facebook.android:facebook-android-sdk:4.24.0"
+    implementation 'com.facebook.android:facebook-android-sdk:4.24.0'
+    implementation 'com.facebook.fresco:fresco:1.1.0'
 }

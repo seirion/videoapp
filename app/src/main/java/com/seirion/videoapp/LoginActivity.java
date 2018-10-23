@@ -11,6 +11,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.login.LoginResult;
 import com.seirion.videoapp.base.ActivityLifecycle;
 import com.seirion.videoapp.databinding.ActivityLoginBinding;
@@ -32,6 +33,7 @@ public class LoginActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(getApplicationContext());
         setDataBinding();
         //FacebookSdk.sdkInitialize(this.getApplicationContext());
         initFacebookLogin();
